@@ -1,0 +1,14 @@
+.styled-checkbox {
+    input {
+        height: 20px;
+        width: 20px;
+        cursor: pointer;
+        @media (max-width: 767px) {
+            height: 30px;
+            width: 30px;
+        }
+    }
+}
+.form-horizontal .styled-checkbox {
+    padding-top: 4px;
+}

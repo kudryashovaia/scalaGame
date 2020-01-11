@@ -1,0 +1,116 @@
+<configuration>
+
+  <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder><pattern>%d{yyyy-MM-dd HH:mm:ss.SSS Z} %-5level: %c{50} - %msg%n</pattern></encoder>
+  </appender>
+
+  <appender name="access" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <encoder>
+      <charset>UTF-8</charset>
+      <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS Z}] %msg%n</pattern>
+    </encoder>
+    <prudent>true</prudent>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${application.home:-.}/logs/access.%d{yyyy-MM}.log</fileNamePattern>
+    </rollingPolicy>
+  </appender>
+  <logger name="utils.LoggingFilter" level="debug" additivity="false">
+    <appender-ref ref="access" />
+  </logger>
+
+  <appender name="error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <encoder>
+      <charset>UTF-8</charset>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS Z} %-5level: %c{50} - %msg%n</pattern>
+    </encoder>
+
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>ERROR</level>
+    </filter>
+
+    <prudent>true</prudent>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${application.home:-.}/logs/error.%d{yyyy-MM-dd}.log</fileNamePattern>
+    </rollingPolicy>
+  </appender>
+
+
+  <appender name="info" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <encoder>
+      <charset>UTF-8</charset>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS Z} %-5level: %c{50} - %msg%n</pattern>
+    </encoder>
+
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>INFO</level>
+    </filter>
+
+    <prudent>true</prudent>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${application.home:-.}/logs/info.%d{yyyy-MM-dd}.log</fileNamePattern>
+    </rollingPolicy>
+  </appender>
+
+
+  <appender name="debug" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <encoder>
+      <charset>UTF-8</charset>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS Z} %-5level: %c{50} - %msg%n</pattern>
+    </encoder>
+
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>DEBUG</level>
+    </filter>
+
+    <prudent>true</prudent>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${application.home:-.}/logs/debug.%d{yyyy-MM-dd}.log</fileNamePattern>
+    </rollingPolicy>
+  </appender>
+
+  <appender name="monitoring" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <encoder>
+      <charset>UTF-8</charset>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS Z} %-5level: %c{50} - %msg%n</pattern>
+    </encoder>
+
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${application.home:-.}/logs/monitoring.%d{yyyy-MM-dd-HH}.log</fileNamePattern>
+      <maxHistory>24</maxHistory>
+    </rollingPolicy>
+  </appender>
+
+  <appender name="monitoring-proxy-verbose" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <encoder>
+      <charset>UTF-8</charset>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS Z} %-5level: %c{50} - %msg%n</pattern>
+    </encoder>
+
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${application.home:-.}/logs/monitoring-proxy-verbose.%d{yyyy-MM-dd-HH}.log</fileNamePattern>
+      <maxHistory>24</maxHistory>
+    </rollingPolicy>
+  </appender>
+
+  <logger name="controllers" level="debug" />
+  <logger name="models" level="debug" />
+  <logger name="utils" level="debug" />
+
+  <logger name="utils.MinerMonitoringActor.verbose" level="warn" additivity="false">
+    <appender-ref ref="monitoring" />
+  </logger>
+
+  <logger name="utils.MonitoringProxyActor.verbose" level="warn" additivity="false">
+    <appender-ref ref="monitoring-proxy-verbose" />
+  </logger>
+
+  <logger name="com.github.mauricio.async.db.postgresql.codec.PostgreSQLConnectionHandler" level="warn" />
+
+  <root level="info">
+    <appender-ref ref="stdout" />
+    <appender-ref ref="error" />
+    <appender-ref ref="info" />
+    <appender-ref ref="debug" />
+  </root>
+
+</configuration>

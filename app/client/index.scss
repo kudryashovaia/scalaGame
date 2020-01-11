@@ -1,0 +1,80 @@
+@import '../../node_modules/font-awesome/css/font-awesome.css';
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+*:focus {
+    outline: none !important;
+}
+
+@for $i from 1 to 18 {
+    @media screen and (min-width: #{$i * 100}px) {
+        span.break-#{$i * 100} {
+            display: none;
+        }
+    }
+    @media screen and (max-width: #{$i * 100 - 1}px) {
+        span.break-#{$i * 100} {
+            display: block;
+            height: 6px;
+        }
+    }
+}
+
+.table.table-hover tr {
+    cursor: pointer;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+div.field-text {
+    padding-top: 7px;
+}
+
+
+$i: 400;
+@while $i < 1000 {
+    .popup-w#{$i}{
+        max-width: #{$i}px;
+    }
+    $i: $i + 50;
+}
+
+// fix ComboOneInput being rendered under miner.isOnline button group
+.Select-menu-outer {
+    z-index: 3;
+}
+
+// fix jumps when opening long popup windows - display scrolls always
+body, .modal {
+    overflow-y: scroll;
+}
+
+$datepicker__border-radius: .42rem;
+$datepicker__day-margin: .2324rem;
+$datepicker__font-size: 1.12rem !default;
+$datepicker__item-size: 2.38rem !default;
+$datepicker__margin: .56rem !default;
+$datepicker__navigation-size: .63rem !default;
+$datepicker__triangle-size: 8px !default;
+@import "../../node_modules/react-datepicker/src/stylesheets/datepicker.scss";
+.react-datepicker-popper {
+    z-index: 15;
+}
+.react-datepicker__time-list {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.react-datepicker__day--outside-month {
+    opacity: 0.5;
+}
+.react-datepicker__close-icon {
+    display: block;
+}

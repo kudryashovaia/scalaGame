@@ -1,0 +1,12 @@
+[Unit]
+Description = ssh tunnel to bitcluster.ru monitoring proxy
+Requires = network.target
+
+[Service]
+ExecStart=/usr/bin/ssh -p2250 -NL 9012:localhost:9012 ubuntu@80.66.151.36
+
+Restart = always
+RestartSec = 5s
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,28 @@
+.news-page {
+    @media (min-width: 992px) {
+        h2 {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+    }
+
+    .post {
+        &.urgent {
+            background-color: rgba(255, 0, 0, 0.2);
+        }
+        &.gray {
+            color: #aaaaaa;
+        }
+        padding: 1em;
+        h3 {
+            margin: 0;
+        }
+    }
+
+    .post-edit-buttons {
+        vertical-align: top;
+    }
+    .post:not(:hover) .post-edit-buttons {
+        opacity: 0.3;
+    }
+}

@@ -1,0 +1,10 @@
+.inline-date-picker {
+    display: inline-block;
+    padding: 0 1ex;
+    input {
+        width: 100px;
+    }
+    .react-datepicker__day--outside-month {
+        opacity: 0.5;
+    }
+}

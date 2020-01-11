@@ -1,0 +1,14 @@
+project/project
+project/target
+target
+logs/
+public/lk.html
+public/static/
+*.iml
+*.eml
+.idea
+
+.jsdep-cache
+.sass-cache
+
+node_modules

@@ -1,0 +1,15 @@
+[Unit]
+Description = bitcluster.ru
+Requires = network.target
+
+[Service]
+WorkingDirectory=/root/bitcluster.ru
+ExecStartPre=/bin/rm -f /root/bitcluster.ru/RUNNING_PID
+ExecStart=/usr/bin/java -Xmx300m -XX:+HeapDumpOnOutOfMemoryError -XX:NativeMemoryTracking=summary -XX:-OmitStackTraceInFastThrow -Dconfig.file=production.conf -cp bitcluster.ru.jar play.core.server.ProdServerStart
+
+Restart = always
+RestartSec = 5s
+
+[Install]
+WantedBy=multi-user.target
+
