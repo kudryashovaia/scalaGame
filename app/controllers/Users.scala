@@ -2,12 +2,12 @@ package controllers
 
 import javax.inject.Inject
 import models.permissions.PermissionsCache
-import models.user.{User, UserCredentials, UserDAO, UserData, UserDataDAO}
-import models.DB
+import models.user.{UserDAO, UserDataDAO}
 import play.api.Configuration
-import play.api.mvc.{InjectedController, Results}
-import scala.concurrent.{ExecutionContext, Future}
+import play.api.mvc.InjectedController
 import utils.{MailService, ResultContentTypes}
+
+import scala.concurrent.ExecutionContext
 
 class Users @Inject() (
   auth: Auth,
@@ -17,7 +17,6 @@ class Users @Inject() (
   authenticationController: Authentication,
   configuration: Configuration,
   mailService: MailService,
-  db: DB,
   implicit val executionContext: ExecutionContext
 ) extends InjectedController with ControllerHelpers with ResultContentTypes {
 

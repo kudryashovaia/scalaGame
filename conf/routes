@@ -8,10 +8,6 @@ GET    /user/permissions          controllers.Users.currentPermissions
 GET    /users                     controllers.Users.list
 GET    /users/:id                 controllers.Users.byId(id: Long)
 
-POST   /clients/register          controllers.Clients.register
-DELETE /clients/:id               controllers.Clients.delete(id: Long)
-
-
 GET    /news                      controllers.News.list
 GET    /news/:id                  controllers.News.byId(id: Long)
 POST   /news                      controllers.News.updateOrCreate

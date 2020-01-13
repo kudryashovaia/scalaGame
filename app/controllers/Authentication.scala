@@ -21,7 +21,7 @@ class Authentication @Inject() (
     val password = (request.body \ "password").as[String]
     log.info(s"Login attempt for ${username} from ${request.remoteAddress}")
     (for {
-      userOpt <- userDAO.byUsername(username, Permissions.Bypass)
+      userOpt <- userDAO.byLogin(username, Permissions.Bypass)
       response <-
         userOpt
           .filter(user => User.checkPassword(password, user))

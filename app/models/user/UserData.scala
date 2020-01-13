@@ -14,14 +14,14 @@ case class UserData(
 )
 
 class UserDataDAO @Inject() (
-  db: DB,
   userDAO: UserDAO,
   permissionsDataDAO: PermissionsDataDAO
 ) extends QuillHelpers {
 
   def create(userData: UserData, requestPermissions: Permissions)(implicit excecutionContext: TransactionalExecutionContext): Future[Long] = {
     for {
-      userId <- userDAO.create(userData.data, requestPermissions)
+      _ <- userDAO.create(userData.data, requestPermissions)
+      userId <- userDAO.userId(userData.data, requestPermissions)
       _ <- permissionsDataDAO.update(userId, userData.permissions, requestPermissions)
     } yield userId
   }
@@ -37,6 +37,4 @@ class UserDataDAO @Inject() (
       )
     }
   }
-
-
 }
