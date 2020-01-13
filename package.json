@@ -20,7 +20,7 @@
     "@types/react-sticky": "^5.0.6",
     "@types/react-virtualized": "^9.7.12",
     "@types/sprintf-js": "^1.1.0",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-polyfill": "^6.26.0",
