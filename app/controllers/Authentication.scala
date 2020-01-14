@@ -1,13 +1,13 @@
 package controllers
 
 import javax.inject.Inject
-import models.permissions.Permissions
 import models.user.{User, UserDAO}
 import play.api.libs.crypto.CookieSigner
 import play.api.libs.json._
 import play.api.mvc._
-import scala.concurrent.{ExecutionContext, Future}
 import utils.{FriendlyException, Logging, Util}
+
+import scala.concurrent.{ExecutionContext, Future}
 
 class Authentication @Inject() (
   auth: Auth,
@@ -21,7 +21,7 @@ class Authentication @Inject() (
     val password = (request.body \ "password").as[String]
     log.info(s"Login attempt for ${username} from ${request.remoteAddress}")
     (for {
-      userOpt <- userDAO.byUsername(username, Permissions.Bypass)
+      userOpt <- userDAO.byLogin(username)
       response <-
         userOpt
           .filter(user => User.checkPassword(password, user))
@@ -36,7 +36,7 @@ class Authentication @Inject() (
   }
 
   def refreshToken = auth.apply().async { request =>
-    userDAO.byId(request.userId, request.permissions).map {
+    userDAO.byId(request.userId).map {
       _.fold(Unauthorized: Result) { user =>
         getTokenResponse(user.id)
       }

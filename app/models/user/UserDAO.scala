@@ -1,46 +1,47 @@
 package models.user
 
+import doobie.implicits._
 import io.getquill.context.async.TransactionalExecutionContext
 import javax.inject.Inject
-import models.permissions.{PermissionFunctionality, Permissions}
 import models.{DB, QuillHelpers}
-import play.api.Configuration
+
 import scala.concurrent.Future
-import utils.UnauthorizedException
 
-class UserDAO @Inject() (
-  val db: DB,
-  val configuration: Configuration
-) extends UserUpdate
-  with UserQuery
-  with QuillHelpers {
+class UserDAO @Inject()
+  extends UserUpdate
+    with UserQuery
+    with QuillHelpers {
 
-  import db.context._
+  val dbConnection = DB
+  private val updateTransactor = dbConnection.mode.yolo
+  import updateTransactor._
 
-  def create(user: User, permissions: Permissions)(implicit executionContext: TransactionalExecutionContext): Future[Long] = {
-    if (permissions.testPath("/admin/users") || permissions.bypass) {
-      run(query[User].insert(lift(user)).returning(_.id))
-    } else Forbidden
-  }
+  def create(user: User)(implicit executionContext: TransactionalExecutionContext): Future[Unit] =
+    sql"""insert into users values(
+         |${user.login},
+         |${user.password},
+         |${user.isAdmin}
+         |)"""
+      .update
+      .run
+      .transact(dbConnection.mode)
+      .unsafeToFuture()
+      .map(_ => ())
 
-  def createClient(
-    login: String,
-    password: String
-  )(implicit executionContext: TransactionalExecutionContext): Future[Long] = {
-    val newUser = User(
-      id = 0L,
-      login = login,
-      password = Some(password).fold("")(User.hashPassword),
-    )
-    for {
-      userId <- run(query[User].insert(lift(newUser)).returning(_.id))
-      _ <- run(query[PermissionFunctionality].insert(lift(PermissionFunctionality(userId = userId, path = "/client"))).returning(_.id))
-    } yield userId
-  }
 
-  def delete(userId: Long, permissions: Permissions)(implicit executionContext: TransactionalExecutionContext): Future[Unit] = {
-    if (permissions.testPath("/admin/clients") || permissions.bypass) {
-      run(query[User].filter(_.id == lift(userId)).delete).map(assertDelete)
-    } else Future.failed(new UnauthorizedException)
-  }
+  def userId(user: User)(implicit executionContext: TransactionalExecutionContext): Future[Long] =
+    sql"""select id
+         |from users
+         |where login = ${user.login}
+         |"""
+      .query[Long]
+      .to[List]
+      .transact(dbConnection.mode)
+      .unsafeToFuture()
+      .map(_.head)
+
+
+  def delete(userId: Long)(implicit executionContext: TransactionalExecutionContext): Future[Unit] =
+    sql"""delete from users where id = $userId""".update.quick.unsafeToFuture()
+
 }

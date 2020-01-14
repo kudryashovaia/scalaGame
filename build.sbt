@@ -19,6 +19,7 @@ lazy val macros =
   .settings()
 
 scalaVersion := "2.12.4"
+lazy val doobieVersion = "0.8.6"
 
 scalacOptions ++= Seq(
   "-deprecation",
@@ -55,15 +56,14 @@ libraryDependencies ++= Seq(
   "org.scala-lang.modules" %% "scala-async" % "0.9.7",
 
   "org.asynchttpclient" % "async-http-client" % "2.4.4",
-  "io.netty" % "netty-all" % "4.1.22.Final"
+  "io.netty" % "netty-all" % "4.1.22.Final",
+  "org.tpolecat" %% "doobie-core" % doobieVersion,
+  "org.tpolecat" %% "doobie-postgres" % doobieVersion
 )
-
-pipelineStages := Seq(digest, gzip)
 
 aggregate in test := false
 aggregate in testOnly := false
 
-assemblyJarName in assembly := "bitcluster.ru.jar"
 mainClass in assembly := Some("play.core.server.ProdServerStart")
 fullClasspath in assembly += Attributed.blank(PlayKeys.playPackageAssets.value)
 

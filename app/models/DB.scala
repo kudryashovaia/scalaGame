@@ -1,20 +1,38 @@
 package models
 
+import akka.actor.ActorSystem
+import akka.stream.{ActorMaterializer, ActorMaterializerSettings, Supervision}
+import cats.effect.IO
 import com.typesafe.config.ConfigFactory
-import io.getquill.PostgresAsyncContext
-import javax.inject.Inject
-import play.api.Configuration
-import scala.collection.JavaConverters._
-import macros.QuillNamingStrategy
+import doobie.Transactor
 
-class DB @Inject() (configuration: Configuration) {
-  val context = new PostgresAsyncContext(QuillNamingStrategy, ConfigFactory.parseMap(Map(
-    "host" -> configuration.get[String]("db.default.host"),
-    "port" -> configuration.get[String]("db.default.port"),
-    "database" -> configuration.get[String]("db.default.database"),
-    "user" -> configuration.get[String]("db.default.username"),
-    "password" -> Option(configuration.get[String]("db.default.password")).filter(_.nonEmpty).orNull,
-    "charset" -> "UTF-8",
-    "poolMaxQueueSize" -> 256 * 256
-  ).asJava))
+object DB {
+  implicit val actorSystem: ActorSystem = ActorSystem("apiClient")
+
+  private lazy val dbConfig = ConfigFactory.load().getConfig("database_connection")
+
+  implicit lazy val cs = IO.contextShift(Context.executionContext)
+
+  lazy val mode = Transactor.fromDriverManager[IO](
+    dbConfig.getString("properties.driver"),
+    dbConfig.getString("properties.sessionUrl"),
+    dbConfig.getString("properties.user"),
+    dbConfig.getString("properties.password")
+  )
+}
+
+object Context {
+  val stoppingDecider: Supervision.Decider = {
+    case th: Throwable =>
+      print(s"Error in event processing, event processing stopped, $th", th)
+      Supervision.Stop
+  }
+
+  implicit val actorSystem: ActorSystem = ActorSystem("apiClient")
+
+  implicit val materializer = ActorMaterializer(
+    ActorMaterializerSettings(actorSystem).withSupervisionStrategy(stoppingDecider)
+  )
+
+  implicit val executionContext = actorSystem.dispatcher
 }
