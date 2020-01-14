@@ -24,3 +24,5 @@ evictionWarningOptions in update :=
       EvictionWarningOptions.default.guessCompatible(m1, m2, ivyScala)
     }
   })
+
+addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.5.1")
