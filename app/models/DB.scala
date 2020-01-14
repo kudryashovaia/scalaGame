@@ -1,11 +1,10 @@
 package models
 
 import akka.actor.ActorSystem
+import akka.stream.{ActorMaterializer, ActorMaterializerSettings, Supervision}
 import cats.effect.IO
 import com.typesafe.config.ConfigFactory
 import doobie.Transactor
-import akka.actor.ActorSystem
-import akka.stream.{ActorMaterializer, ActorMaterializerSettings, Supervision}
 
 object DB {
   implicit val actorSystem: ActorSystem = ActorSystem("apiClient")

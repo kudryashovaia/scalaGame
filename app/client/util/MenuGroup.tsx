@@ -1,13 +1,11 @@
 import React from 'react';
 import _ from "lodash";
 import {MenuItem, NavDropdown} from 'react-bootstrap';
-import {Permissions} from "./Permissions";
 
 
 interface MenuDescription {
   title: string;
   link?: string;
-  permissions?: string[];
   items?: MenuDescription[];
 }
 

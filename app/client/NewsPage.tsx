@@ -1,22 +1,16 @@
 import React from "react";
 import _ from "lodash";
-import moment from "moment";
-import Markdown from "react-markdown";
 import RichTextEditor, {RichTextEditorValue} from "react-rte";
 
 import {AsyncWrapper} from "./react-helpers/AsyncWrapper";
 import {Nonce} from "./react-helpers/Nonce";
-import {Permissions} from "./util/Permissions";
-import {Button, ButtonGroup, Col, Form, Modal, Row} from "react-bootstrap";
-import {Route} from "react-router";
-import {history} from "./react-helpers/history";
+import {Button, Col, Form, Modal, Row} from "react-bootstrap";
 import {SmartForm} from "./react-helpers/form/SmartForm";
 import {DateTimeField} from "./react-helpers/form/DateTimeField";
 import {StringField} from "./react-helpers/form/StringField";
 import {AsyncButton} from "./react-helpers/AsyncButton";
 import {auth} from "./auth";
 import "./NewsPage.scss";
-import {Confirm} from "./util/Confirm";
 import {CheckboxField} from "./react-helpers/form/CheckboxField";
 import {StateBind} from "./react-helpers/bind/StateBind";
 
@@ -70,12 +64,10 @@ export class NewsPage extends React.Component<{}> {
                 <AsyncWrapper
                   data={{
                     news: { url: "/news" }
-                    //permissions: { url: "/user/permissions" }
                   }}
                   nonce={nonce}
                   render={(data: {
                     news: NewsPost[]
-                    //permissions: string[]
                   }) => {
                     return(<div><h1>again</h1></div>)
                   }

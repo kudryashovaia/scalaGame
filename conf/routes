@@ -3,8 +3,6 @@ GET    /                          controllers.Assets.at(path="/public/", file="l
 POST   /login                     controllers.Authentication.login
 GET    /login-refresh             controllers.Authentication.refreshToken
 
-GET    /user/permissions          controllers.Users.currentPermissions
-
 GET    /users                     controllers.Users.list
 GET    /users/:id                 controllers.Users.byId(id: Long)
 

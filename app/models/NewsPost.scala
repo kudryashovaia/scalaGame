@@ -1,13 +1,12 @@
 package models
 
 
-import io.getquill.context.async.TransactionalExecutionContext
+import doobie.implicits._
 import javax.inject.Inject
 import macros.JsonFormatAnnotation
-import models.permissions.Permissions
+import models.Context._
 
-
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 @JsonFormatAnnotation
 case class NewsPost(
@@ -17,72 +16,66 @@ case class NewsPost(
   body: String
 )
 
-class NewsPostDAO @Inject() (
-  db: DB
-) extends QuillHelpers {
-  import db.context._
+class NewsPostDAO @Inject()
+  extends QuillHelpers {
+
+  private val dbConnection = DB
+
+  private val updateTransactor = dbConnection.mode.yolo
+  import updateTransactor._
 
 
-  def list(permissions: Permissions)(implicit executionContext: ExecutionContext): Future[Seq[NewsPost]] = {
-    run(
-      query[NewsPost]
-        .sortBy(t =>t.timestamp)(Ord.desc)
-    )
-  }
+  def list(): Future[Seq[NewsPost]] =
+    sql"""select *
+         |from news_posts
+         |order by RANDOM()
+         |""".stripMargin
+      .query[NewsPost]
+      .to[List]
+      .transact(dbConnection.mode)
+      .unsafeToFuture()
 
 
-  def byId(id: Long, permissions: Permissions)(implicit executionContext: ExecutionContext): Future[Option[NewsPost]] = {
-    if (permissions.testPath("/admin/news") || permissions.bypass) {
-      run(
-        query[NewsPost]
-          .filter(_.id == lift(id))
-          .take(1)
-      ).map(_.headOption)
-    } else Forbidden
-  }
+  def byId(id: Long): Future[Option[NewsPost]] =
+      sql"""select *
+           |from news_posts
+           |where id = $id
+           |""".stripMargin
+        .query[NewsPost]
+        .to[List]
+        .transact(dbConnection.mode)
+        .unsafeToFuture()
+        .map(_.headOption)
 
-  def insert(
-    post: NewsPost,
-    permissions: Permissions
-  )(
-    implicit executionContext: TransactionalExecutionContext
-  ): Future[Unit] = {
-    if (permissions.testPath("/admin/news") || permissions.bypass) {
-      run(
-        query[NewsPost]
-          .insert(lift(post)).returning(_.id)
-      ).map(assertInsert)
-    } else Forbidden
-  }
+  def insert(post: NewsPost): Future[Unit] =
+      sql"""insert into news_posts values(
+            |${post.id},
+            |${post.timestamp},
+            |${post.subject},
+            |${post.body}
+            |)
+           |""".stripMargin
+        .update
+        .run
+        .transact(dbConnection.mode)
+        .unsafeToFuture()
+        .map(_ => ())
 
-  def update(
-    post: NewsPost,
-    permissions: Permissions
-  )(
-    implicit executionContext: TransactionalExecutionContext
-  ): Future[Unit] = {
-    if (permissions.testPath("/admin/news") || permissions.bypass) {
-      run(
-        query[NewsPost]
-          .filter(_.id == lift(post.id))
-          .update(lift(post))
-      ).map(assertUpdate)
-    } else Forbidden
-  }
+  def update(post: NewsPost): Future[Unit] =
+      sql"""select *
+           |from news_posts
+           |order by RANDOM()
+           |""".stripMargin
+        .update
+        .quick
+        .unsafeToFuture()
 
-  def delete(
-    postId: Long,
-    permissions: Permissions
-  )(
-    implicit executionContext: TransactionalExecutionContext
-  ): Future[Unit] = {
-    if (permissions.testPath("/admin/news") || permissions.bypass) {
-      run(
-        query[NewsPost]
-          .filter(_.id == lift(postId))
-          .delete
-      ).map(assertDelete)
-    } else Forbidden
-  }
+  def delete(postId: Long): Future[Unit] =
+    sql"""delete from news_posts
+         |where id = $postId
+         |""".stripMargin
+      .update
+      .quick
+      .unsafeToFuture()
 
 }
