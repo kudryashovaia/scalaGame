@@ -3,7 +3,7 @@ import {Redirect, Route, Switch} from "react-router";
 
 import {NewsPage} from "./NewsPage";
 import {BlackJack} from "./games/BlackJack";
-import {TicTacToe} from "./games/TicTacToe";
+import {TicTacToe} from "./games/tic-tac-toe/TicTacToe";
 
 export class Routes extends React.Component<any> {
   render() {

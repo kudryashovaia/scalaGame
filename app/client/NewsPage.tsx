@@ -1,18 +1,5 @@
 import React from "react";
-import _ from "lodash";
-import RichTextEditor, {RichTextEditorValue} from "react-rte";
-
-import {AsyncWrapper} from "./react-helpers/AsyncWrapper";
-import {Nonce} from "./react-helpers/Nonce";
-import {Button, Col, Form, Modal, Row} from "react-bootstrap";
-import {SmartForm} from "./react-helpers/form/SmartForm";
-import {DateTimeField} from "./react-helpers/form/DateTimeField";
-import {StringField} from "./react-helpers/form/StringField";
-import {AsyncButton} from "./react-helpers/AsyncButton";
-import {auth} from "./auth";
 import "./NewsPage.scss";
-import {CheckboxField} from "./react-helpers/form/CheckboxField";
-import {StateBind} from "./react-helpers/bind/StateBind";
 
 // monkey-patch console.warn to hide Immutable Iterable.length warning,
 // which is due to the fact that Draft-js can't update Immutable version for over a year
