@@ -21,7 +21,6 @@ export class Main extends React.Component<{}> {
                             <MenuGroup
                                 groupTitle="Games"
                                 menus={[
-                                    {title: "Black Jack", link: "/black-jack"},
                                     {title: "Tic Tac Toe", link:"/tic-tac-toe"}
                                 ]}
                             />
