@@ -2,21 +2,17 @@ package models.user
 
 import doobie.implicits._
 import io.getquill.context.async.TransactionalExecutionContext
-import javax.inject.Inject
-import models.{DB, QuillHelpers}
+import models.DB
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class UserDAO @Inject()
-  extends UserUpdate
-    with UserQuery
-    with QuillHelpers {
+class UserDAO {
 
   val dbConnection = DB
   private val updateTransactor = dbConnection.mode.yolo
   import updateTransactor._
 
-  def create(user: User)(implicit executionContext: TransactionalExecutionContext): Future[Unit] =
+  def creator(user: User)(implicit executionContext: TransactionalExecutionContext): Future[Unit] =
     sql"""insert into users values(
          |${user.login},
          |${user.password},
@@ -44,4 +40,61 @@ class UserDAO @Inject()
   def delete(userId: Long)(implicit executionContext: TransactionalExecutionContext): Future[Unit] =
     sql"""delete from users where id = $userId""".update.quick.unsafeToFuture()
 
+
+  def setPasswordHash(userId: Long, passwordHash: String)(implicit executionContext: TransactionalExecutionContext): Future[Unit] =
+    sql"""update users set
+         |  password = $passwordHash
+         |where id   = $userId
+         |""".stripMargin
+      .update
+      .quick
+      .unsafeToFuture()
+
+
+  def byIdSearcher(id: Long)(implicit executionContext: ExecutionContext): Future[Option[User]] =
+    sql"""select *
+         |from users
+         |where id = $id
+         |""".stripMargin
+      .query[User]
+      .to[List]
+      .transact(dbConnection.mode)
+      .unsafeToFuture()
+      .map(_.headOption)
+
+
+  def byLogin(login: String)(implicit executionContext: ExecutionContext): Future[Option[User]] =
+    sql"""select *
+         |from users
+         |where login = $login
+         |""".stripMargin
+      .query[User]
+      .to[List]
+      .transact(dbConnection.mode)
+      .unsafeToFuture()
+      .map(_.headOption)
+
+
+  def list()(implicit executionContext: ExecutionContext): Future[List[User]] =
+    sql"""select *
+         |from users
+         |order by RANDOM()
+         |""".stripMargin
+      .query[User]
+      .to[List]
+      .transact(dbConnection.mode)
+      .unsafeToFuture()
+
+  def create(userData: User)(implicit excecutionContext: TransactionalExecutionContext): Future[Long] = {
+    for {
+      _ <- creator(userData)
+      userId <- userId(userData)
+    } yield userId
+  }
+
+  def byId(userId: Long)(implicit executionContext: ExecutionContext): Future[Option[User]] = {
+    for {
+      userOpt <- byIdSearcher(userId)
+    } yield userOpt
+  }
 }

@@ -5,7 +5,7 @@ import javax.inject.Inject
 import play.api.libs.crypto.CookieSigner
 import play.api.libs.json.Json
 import play.api.mvc._
-import utils.{ErrorLogger, FriendlyException, Logging, ShortcutResultException, UnauthorizedException, Util}
+import utils.{FriendlyException, Logging, ShortcutResultException, UnauthorizedException, Util}
 import scala.concurrent.{ExecutionContext, Future}
 
 class AuthenticatedRequest[A](
@@ -14,7 +14,6 @@ class AuthenticatedRequest[A](
 ) extends WrappedRequest[A](request)
 
 class Auth @Inject() (
-  errorLogger: ErrorLogger,
   cookieSigner: CookieSigner,
   executionContext: ExecutionContext,
   bodyParser: BodyParsers.Default
@@ -25,18 +24,16 @@ class Auth @Inject() (
   def checkPermissions(paths: Seq[String]): Authenticated = new Authenticated(
     paths,
     cookieSigner,
-    errorLogger,
     executionContext,
     bodyParser
   )
 
-  def unauthenticated() = new Unauthenticated(errorLogger, executionContext, bodyParser)
+  //def unauthenticated() = new Unauthenticated(executionContext, bodyParser)
 }
 
 class Authenticated(
   paths: Seq[String],
   cookieSigner: CookieSigner,
-  errorLogger: ErrorLogger,
   implicit val executionContext: ExecutionContext,
   val parser: BodyParsers.Default
 ) extends ActionBuilder[AuthenticatedRequest, AnyContent] with Logging {
@@ -55,7 +52,6 @@ class Authenticated(
     } catch {
       case th: Throwable =>
         log.error(th, s"authenticated block invocation failed for $request")
-        errorLogger.send(th)
         Future.successful(Results.InternalServerError("Внутренняя ошибка"))
     }
   }
@@ -100,7 +96,6 @@ class Authenticated(
         Results.Forbidden
       case ex: Throwable =>
         log.error(ex, s"Internal server error for $request, user #$userId")
-        errorLogger.send(ex)
         Results.InternalServerError("Внутренняя ошибка")
     }
 
@@ -111,29 +106,27 @@ class Authenticated(
 }
 
 
-class Unauthenticated(
-  errorLogger: ErrorLogger,
-  implicit val executionContext: ExecutionContext,
-  val parser: BodyParsers.Default
-) extends ActionBuilder[Request, AnyContent] with Logging {
-
-  def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = {
-    val exceptionHandler: PartialFunction[Throwable, Result] = {
-      case ShortcutResultException(res) =>
-        res
-      case ex: FriendlyException =>
-        log.warn(s"Friendly exception for $request: ${ex.getMessage}")
-        Results.BadRequest(ex.getMessage)
-      case ex: Throwable =>
-        log.error(ex, s"Internal server error for $request")
-        errorLogger.send(ex)
-        Results.InternalServerError("Внутренняя ошибка")
-    }
-
-    try {
-      block(request).recover(exceptionHandler)
-    } catch exceptionHandler.andThen(Future.successful)
-  }
-
-}
+//class Unauthenticated(
+//  implicit val executionContext: ExecutionContext,
+//  val parser: BodyParsers.Default
+//) extends ActionBuilder[Request, AnyContent] with Logging {
+//
+//  def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = {
+//    val exceptionHandler: PartialFunction[Throwable, Result] = {
+//      case ShortcutResultException(res) =>
+//        res
+//      case ex: FriendlyException =>
+//        log.warn(s"Friendly exception for $request: ${ex.getMessage}")
+//        Results.BadRequest(ex.getMessage)
+//      case ex: Throwable =>
+//        log.error(ex, s"Internal server error for $request")
+//        Results.InternalServerError("Внутренняя ошибка")
+//    }
+//
+//    try {
+//      block(request).recover(exceptionHandler)
+//    } catch exceptionHandler.andThen(Future.successful)
+//  }
+//
+//}
 

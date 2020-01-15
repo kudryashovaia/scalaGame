@@ -1,0 +1,5 @@
+create table users (id bigint not null, login varchar(50) not null, password varchar(300) not null, is_admin boolean not null default false);
+
+create table news_posts(id bigint not null, timestamp bigint, subject varchar(100) not null, body varchar(500) not null);
+
+insert into users values(0, 'root', '1', true);

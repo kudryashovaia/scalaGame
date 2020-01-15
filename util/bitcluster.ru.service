@@ -1,11 +1,11 @@
 [Unit]
-Description = bitcluster.ru
+Description = scalaGame
 Requires = network.target
 
 [Service]
-WorkingDirectory=/root/bitcluster.ru
-ExecStartPre=/bin/rm -f /root/bitcluster.ru/RUNNING_PID
-ExecStart=/usr/bin/java -Xmx300m -XX:+HeapDumpOnOutOfMemoryError -XX:NativeMemoryTracking=summary -XX:-OmitStackTraceInFastThrow -Dconfig.file=production.conf -cp bitcluster.ru.jar play.core.server.ProdServerStart
+WorkingDirectory=/root/scalaGame
+ExecStartPre=/bin/rm -f /root/scalaGame/RUNNING_PID
+ExecStart=/usr/bin/java -Xmx300m -XX:+HeapDumpOnOutOfMemoryError -XX:NativeMemoryTracking=summary -XX:-OmitStackTraceInFastThrow -Dconfig.file=production.conf -cp scalagame.jar play.core.server.ProdServerStart
 
 Restart = always
 RestartSec = 5s

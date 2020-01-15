@@ -5,7 +5,6 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class FutureHelpers @Inject() (
-  errorLogger: ErrorLogger,
   implicit val executionContext: ExecutionContext
 ) {
 
@@ -15,7 +14,6 @@ class FutureHelpers @Inject() (
       case err: Throwable =>
         log.error(err, "got error from fire-and-forget future")
         log.error(originalCallStack)
-        errorLogger.send(err)
     }
     ()
   }
@@ -26,7 +24,6 @@ class FutureHelpers @Inject() (
       case err: Throwable =>
         log.error(err, "got error from fire-and-forget future")
         log.error(originalCallStack)
-        errorLogger.send(err)
     }
     ()
   }
@@ -39,7 +36,6 @@ class FutureHelpers @Inject() (
         } catch {
           case ex: Throwable =>
             log.error(ex, "error in actor receive.isDefinedAt")
-            errorLogger.send(ex)
             throw ex
         }
       }
@@ -50,7 +46,6 @@ class FutureHelpers @Inject() (
         } catch {
           case ex: Throwable =>
             log.error(ex, "error in actor receive.apply")
-            errorLogger.send(ex)
             throw ex
         }
       }
