@@ -2,7 +2,6 @@ import React from "react";
 import {Redirect, Route, Switch} from "react-router";
 
 import {NewsPage} from "./NewsPage";
-import {BlackJack} from "./games/BlackJack";
 import {TicTacToe} from "./games/tic-tac-toe/TicTacToe";
 
 export class Routes extends React.Component<any> {
@@ -14,7 +13,6 @@ export class Routes extends React.Component<any> {
     }[] = [
       { link: "/news", component: NewsPage },
 
-      { link: "/black-jack", component: BlackJack},
       { link: "/tic-tac-toe", component: TicTacToe}
     ];
 
