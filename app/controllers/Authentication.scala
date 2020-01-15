@@ -16,7 +16,7 @@ class Authentication @Inject() (
   implicit val executionContext: ExecutionContext
 ) extends InjectedController with Logging {
 
-  def login = auth.unauthenticated().async(parse.json) { request =>
+  def login = auth.apply().async(parse.json) { request =>
     val username = (request.body \ "username").as[String]
     val password = (request.body \ "password").as[String]
     log.info(s"Login attempt for ${username} from ${request.remoteAddress}")

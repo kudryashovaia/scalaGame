@@ -1,5 +1,5 @@
 [Unit]
-Description = ssh tunnel to bitcluster.ru monitoring proxy
+Description = ssh tunnel to scalaGame monitoring proxy
 Requires = network.target
 
 [Service]
