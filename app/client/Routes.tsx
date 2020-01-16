@@ -3,6 +3,7 @@ import {Redirect, Route, Switch} from "react-router";
 
 import {NewsPage} from "./NewsPage";
 import {TicTacToe} from "./games/tic-tac-toe/TicTacToe";
+import {Login} from "./Login";
 
 export class Routes extends React.Component<any> {
   render() {
@@ -11,6 +12,7 @@ export class Routes extends React.Component<any> {
       exact?: boolean,
       component: React.ComponentType<any>
     }[] = [
+      { link: "/login", component: Login },
       { link: "/news", component: NewsPage },
 
       { link: "/tic-tac-toe", component: TicTacToe}
@@ -26,7 +28,7 @@ export class Routes extends React.Component<any> {
     return (
       <Switch>
         {routeNodes}
-        <Route render={() => <Redirect to="/news" /> } />
+        <Route render={() => <Redirect to="/login" /> } />
       </Switch>
     )
   }
