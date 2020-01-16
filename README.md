@@ -14,10 +14,24 @@
  - clone this repository by
     `git clone https://github.com/kudryashovaia/scalaGame.git`
  - in main directory command: `.\util\start-webpack.sh`. This script run server.
- - in browser go to `localhost:9011`. You will be redirected to page `/login`.
+ - in browser go to `localhost:9011`. You will be redirected to page `/login`. <br/>
+    ![Image alt](https://github.com/kudryashovaia/scalaGame/blob/master/readmePictures/login1.png?raw=true)
  
 ##How to play:
- - login: root, password: 1 to login.
+ - login: root, password: 1 to login.<br/>
+    ![Image alt](https://github.com/kudryashovaia/scalaGame/blob/master/readmePictures/login2.png?raw=true)
+ - you will be redirected to the main page. you can choose the game to play in slide menu at top <br/>
+    ![Image alt](https://github.com/kudryashovaia/scalaGame/blob/master/readmePictures/main_page.png?raw=true)
+ - here TicTacToe game <br/>
+    ![Image alt](https://github.com/kudryashovaia/scalaGame/blob/master/readmePictures/tic-tac-toe1.png?raw=true)
+ - example of playing <br/>
+    ![Image alt](https://github.com/kudryashovaia/scalaGame/blob/master/readmePictures/tic-tac-toe2.png?raw=true) 
+ - at the end you can restart the game <br/>
+    ![Image alt](https://github.com/kudryashovaia/scalaGame/blob/master/readmePictures/tic-tac-toe3.png?raw=true)
+    
+##Hope you will enjoy
+ 
+    
 
  
  
