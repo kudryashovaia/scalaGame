@@ -18,12 +18,12 @@ object User {
     BCrypt.hashpw(password, BCrypt.gensalt(8))
   }
 
-  def checkPassword(password: String, user: User): Boolean = true
-//    try {
-//      BCrypt.checkpw(password, user.password)
-//    } catch {
-//      case _: Throwable => false
-//    }
+  def checkPassword(password: String, user: User): Boolean =
+    try {
+      BCrypt.checkpw(password, user.password)
+    } catch {
+      case _: Throwable => false
+    }
 
   def generatePassword(): String = {
     val chars = "abcdefghjkmnpqrstuvwxyzACDEFGHJKMNPRSTUVWXYZ"

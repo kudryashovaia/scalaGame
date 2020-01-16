@@ -12,7 +12,7 @@ export class Main extends React.Component<{}> {
                 <Navbar inverse staticTop fluid>
                     <Navbar.Header>
                         <Navbar.Brand>
-                            <Link to="/">ScalaGames project</Link>
+                            <Link to="/">ScalaGame project</Link>
                         </Navbar.Brand>
                         <Navbar.Toggle/>
                     </Navbar.Header>
@@ -21,7 +21,6 @@ export class Main extends React.Component<{}> {
                             <MenuGroup
                                 groupTitle="Games"
                                 menus={[
-                                    {title: "Black Jack", link: "/black-jack"},
                                     {title: "Tic Tac Toe", link:"/tic-tac-toe"}
                                 ]}
                             />
