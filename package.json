@@ -80,7 +80,7 @@
     ]
   },
   "devDependencies": {
-    "node-sass": "^4.13.0",
+    "node-sass": "^7.0.0",
     "svg-spritemap-webpack-plugin": "^3.5.3",
     "webpack-dev-server": "^3.0.0",
     "react": "16.8.4",
